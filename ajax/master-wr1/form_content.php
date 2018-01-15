@@ -78,19 +78,24 @@
 						<div class="row">
 							<label class="label col col-4">Jenis Retribusi <font color="red">*</font></label>
 							<div class="col col-8">
+								
 								<label class="state">
 									<select name="kd_rekening" class="form-control" id="kd_rekening" <?=($act=='add'?'required':'disabled')?>>
 										<option value="" selected></option>
 										<?php
 
-											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' ORDER BY id_jenis_retribusi ASC";
+											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' 
+													and kd_rekening in (select substring(kd_rekening from 1 for 5) from app_ref_jenis_retribusi where tipe_retribusi='1') 
+													ORDER BY id_jenis_retribusi ASC";
+											
 											$result1 = $db->Execute($sql);
 											
 											while($row1 = $result1->FetchRow())
 											{
 												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
 												
-												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 ORDER BY id_jenis_retribusi ASC";
+												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' 
+														AND length(kd_rekening)>5 and tipe_retribusi='1' ORDER BY id_jenis_retribusi ASC";
 												$result2 = $db->Execute($sql);
 												
 												while($row2 = $result2->FetchRow())
