@@ -5,7 +5,7 @@
 
     $key = $_POST['searched_npwrd'];    
         
-    $sql = "SELECT * FROM app_reg_wr WHERE(jenis_retribusi='1') AND ((npwrd LIKE '%".$key."%') OR (nm_wp_wr LIKE '%".$key."%') OR (alamat_wp_wr LIKE '%".$key."%'))";
+    $sql = "SELECT * FROM app_reg_wr WHERE(tipe_retribusi='1') AND ((npwrd LIKE '%".$key."%') OR (nm_wp_wr LIKE '%".$key."%') OR (alamat_wp_wr LIKE '%".$key."%'))";
     $result = $db->Execute($sql);
     if(!$result)
     {
