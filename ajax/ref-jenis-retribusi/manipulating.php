@@ -38,7 +38,7 @@
 	if($act=='add')
 	{		
 		$arr_data['item'] = $item;
-		$arr_data['karcis'] = $karcis;
+		$arr_data['tipe_retribusi'] = $karcis;
 
 		$result = $DML->save($arr_data);
 		
@@ -50,7 +50,7 @@
 	{		
 		$id=$_POST['id'];
 		$arr_data['item'] = $item;
-		$arr_data['karcis'] = $karcis;
+		$arr_data['tipe_retribusi'] = $karcis;
 		
 		$cond = "id_jenis_retribusi='".$id."'";
 		$result = $DML->update($arr_data,$cond);
