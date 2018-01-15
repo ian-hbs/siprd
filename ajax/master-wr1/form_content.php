@@ -79,7 +79,7 @@
 							<div class="col col-8">
 								
 								<label class="state">
-									<select name="kd_rekening" class="form-control" id="kd_rekening">
+									<select name="kd_rekening" class="form-control" id="kd_rekening" <?php echo ($act=='edit'?'disabled':'') ?>>
 										<option value="" selected></option>
 										<?php
 
@@ -108,7 +108,12 @@
 											
 										?>
 									</select>
-									
+									<?php
+										if($act=='edit')
+										{
+											echo "<input type='hidden' name='kd_rekening' value='".$curr_data['kd_rekening']."'>";
+										}
+									?>
 								</label>
 
 								<div class="note">

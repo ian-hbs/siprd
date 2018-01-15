@@ -19,7 +19,7 @@
     $id_value = ($act=='edit'?$_GET['id']:'');    
 
     $arr_field = array('npwrd','no_registrasi','nm_wp_wr','alamat_wp_wr','kelurahan','kecamatan',
-    					'kota','kd_pos','no_tlp','tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','jenis_wr','kd_rekening');
+    					'kota','kd_pos','no_tlp','tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','tipe_wr','kd_rekening');
 
     $curr_data = $DML1->getCurrentData($act,$arr_field,$id_name,$id_value);
     $form_id = 'wr-reg-form';
@@ -75,7 +75,7 @@
 							<div class="col col-8">
 								
 								<label class="state">
-									<select name="kd_rekening" class="form-control" id="kd_rekening">
+									<select name="kd_rekening" class="form-control" id="kd_rekening" <?php echo ($act=='edit'?'disabled':'') ?>>
 										<option value="" selected></option>
 										<?php
 
@@ -104,7 +104,12 @@
 											
 										?>
 									</select>
-									
+									<?php
+										if($act=='edit')
+										{
+											echo "<input type='hidden' name='kd_rekening' value='".$curr_data['kd_rekening']."'>";
+										}
+									?>
 								</label>
 
 								<div class="note">
@@ -123,11 +128,11 @@
 									<?php
 									echo "
 									<label class='radio'>
-										<input type='radio' name='jenis_wr' id='jenis_wr1' value='1' onclick=\"control_wr_data('1')\" ".($act=='edit'?($curr_data['jenis_wr']=='1'?'checked':''):'checked').">
+										<input type='radio' name='tipe_wr' id='tipe_wr1' value='1' onclick=\"control_wr_data('1')\" ".($act=='edit'?($curr_data['tipe_wr']=='1'?'checked':''):'checked').">
 										<i></i>Perorangan
 									</label>
 									<label class='radio'>
-										<input type='radio' name='jenis_wr' id='jenis_wr2' value='2' onclick=\"control_wr_data('2')\" ".($act=='edit'?($curr_data['jenis_wr']=='2'?'checked':''):'')."/>
+										<input type='radio' name='tipe_wr' id='tipe_wr2' value='2' onclick=\"control_wr_data('2')\" ".($act=='edit'?($curr_data['tipe_wr']=='2'?'checked':''):'')."/>
 										<i></i>Instansi/SKPD
 									</label>";
 									?>
@@ -142,10 +147,10 @@
 							<div class="col col-8">
 								<?php
 
-								$display1 = ($act=='edit'?($curr_data['jenis_wr']=='1'?'block':'none'):'block');
-								$display2 = ($act=='edit'?($curr_data['jenis_wr']=='2'?'block':'none'):'none');
-								$ext_attr1 = ($act=='edit'?($curr_data['jenis_wr']=='1'?'required':'disabled'):'required');
-								$ext_attr2 = ($act=='edit'?($curr_data['jenis_wr']=='2'?'required':'disabled'):'disabled');
+								$display1 = ($act=='edit'?($curr_data['tipe_wr']=='1'?'block':'none'):'block');
+								$display2 = ($act=='edit'?($curr_data['tipe_wr']=='2'?'block':'none'):'none');
+								$ext_attr1 = ($act=='edit'?($curr_data['tipe_wr']=='1'?'required':'disabled'):'required');
+								$ext_attr2 = ($act=='edit'?($curr_data['tipe_wr']=='2'?'required':'disabled'):'disabled');
 
 								echo "<label class='input' id='nm_wp1'>
 									<input type='text' name='nm_wp_wr' id='nm_wp_wr1' class='form-control' value='".$curr_data['nm_wp_wr']."' style='display:".$display1."' ".$ext_attr1."/>
