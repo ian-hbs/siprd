@@ -21,9 +21,9 @@
 
 	if($act=='add' || $act=='edit')
 	{
-		$jenis_wr = $_POST['jenis_wr'];	
+		$tipe_wr = $_POST['tipe_wr'];	
 		$arr_field = array('no_registrasi','nm_wp_wr','alamat_wp_wr','kelurahan','kecamatan',
-							'kota','kd_pos','no_tlp','tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','jenis_retribusi');
+							'kota','kd_pos','no_tlp','tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','kd_rekening','tipe_retribusi');
 
 		foreach($_POST as $key => $val)
 		{
@@ -32,8 +32,8 @@
 				if($key=='no_registrasi')
 					$arr_data[$key] = date('Y').$val;
 				else if($key=='nm_wp_wr')
-				{					
-					if($jenis_wr=='2')
+				{
+					if($tipe_wr=='2')
 					{						
 						$x = explode('_',$val);
 						$val = $x[1];
@@ -52,7 +52,7 @@
 	if($act=='add')
 	{
 		$arr_data['npwrd'] = $_POST['npwrd'];
-		$arr_data['jenis_wr'] = $jenis_wr;		
+		$arr_data['tipe_wr'] = $tipe_wr;		
 
 		$result = $DML->save($arr_data);
 		
@@ -63,7 +63,7 @@
 	else if($act=='edit')
 	{		
 		$id=$_POST['id'];
-		$arr_data['jenis_wr'] = $jenis_wr;		
+		$arr_data['tipe_wr'] = $tipe_wr;		
 
 		$cond = "npwrd='".$id."'";
 		$result = $DML->update($arr_data,$cond);		

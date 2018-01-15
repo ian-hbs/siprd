@@ -8,7 +8,6 @@
 	$global =new global_obj($db);
 	$DML1 = new DML('app_reg_wr',$db);
 	$DML2 = new DML('app_ref_instansi',$db);
-	$DML3 = new DML('app_ref_jenis_retribusi',$db);
 
 	$act = $_GET['act'];
 	$fn = $_GET['fn'];
@@ -18,7 +17,7 @@
     $id_value = ($act=='edit'?$_GET['id']:'');    
 
     $arr_field = array('no_registrasi','nm_wp_wr','alamat_wp_wr','no_tlp','kelurahan','kecamatan','kota','kd_pos',
-    					'tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','npwrd','jenis_wr','kd_rekening');
+    					'tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','npwrd','tipe_wr','kd_rekening');
 
     $curr_data = $DML1->getCurrentData($act,$arr_field,$id_name,$id_value);
     $form_id = 'wr-reg-form';
@@ -54,7 +53,7 @@
     	<input type="hidden" name="act" value="<?=$act?>"/>
     	<input type="hidden" name="fn" value="<?=$fn?>"/>
     	<input type="hidden" name="men_id" value="<?=$men_id?>"/>
-    	<input type="hidden" name="jenis_retribusi" value="1"/>
+    	<input type="hidden" name="tipe_retribusi" value="1"/>
 		<fieldset>
 			
 
@@ -76,11 +75,11 @@
 
 					<section>
 						<div class="row">
-							<label class="label col col-4">Jenis Retribusi <font color="red">*</font></label>
+							<label class="label col col-4">Jenis Retribusi</label>
 							<div class="col col-8">
 								
 								<label class="state">
-									<select name="kd_rekening" class="form-control" id="kd_rekening" <?=($act=='add'?'required':'disabled')?>>
+									<select name="kd_rekening" class="form-control" id="kd_rekening">
 										<option value="" selected></option>
 										<?php
 
@@ -100,7 +99,7 @@
 												
 												while($row2 = $result2->FetchRow())
 												{
-													$selected = ($act=='edit'?(substr($row2['kd_rekening'],0,5)==$curr_data['kd_rekening']?'selected':''):'');
+													$selected = ($act=='edit'?($row2['kd_rekening']==$curr_data['kd_rekening']?'selected':''):'');
 													echo "<option value='".$row2['kd_rekening']."' ".$selected.">".$row2['jenis_retribusi']."</option>";
 												}
 
@@ -111,6 +110,10 @@
 									</select>
 									
 								</label>
+
+								<div class="note">
+									jika dikosongkan WR dapat melakukan semua transaksi
+								</div>
 							</div>
 
 						</div>
@@ -125,11 +128,11 @@
 									<?php
 									echo "
 									<label class='radio'>
-										<input type='radio' name='jenis_wr' id='jenis_wr1' value='1' onclick=\"control_wr_data('1')\" ".($act=='edit'?($curr_data['jenis_wr']=='1'?'checked':''):'checked').">
+										<input type='radio' name='tipe_wr' id='tipe_wr1' value='1' onclick=\"control_wr_data('1')\" ".($act=='edit'?($curr_data['tipe_wr']=='1'?'checked':''):'checked').">
 										<i></i>Perorangan
 									</label>
 									<label class='radio'>
-										<input type='radio' name='jenis_wr' id='jenis_wr2' value='2' onclick=\"control_wr_data('2')\" ".($act=='edit'?($curr_data['jenis_wr']=='2'?'checked':''):'')."/>
+										<input type='radio' name='tipe_wr' id='tipe_wr2' value='2' onclick=\"control_wr_data('2')\" ".($act=='edit'?($curr_data['tipe_wr']=='2'?'checked':''):'')."/>
 										<i></i>Instansi/SKPD
 									</label>";
 									?>
@@ -143,10 +146,10 @@
 							<label class="label col col-4">Nama WR<font color="red">*</font></label>
 							<div class="col col-8">
 								<?php
-								$display1 = ($act=='edit'?($curr_data['jenis_wr']=='1'?'block':'none'):'block');
-								$display2 = ($act=='edit'?($curr_data['jenis_wr']=='2'?'block':'none'):'none');
-								$ext_attr1 = ($act=='edit'?($curr_data['jenis_wr']=='1'?'required':'disabled'):'required');
-								$ext_attr2 = ($act=='edit'?($curr_data['jenis_wr']=='2'?'required':'disabled'):'disabled');
+								$display1 = ($act=='edit'?($curr_data['tipe_wr']=='1'?'block':'none'):'block');
+								$display2 = ($act=='edit'?($curr_data['tipe_wr']=='2'?'block':'none'):'none');
+								$ext_attr1 = ($act=='edit'?($curr_data['tipe_wr']=='1'?'required':'disabled'):'required');
+								$ext_attr2 = ($act=='edit'?($curr_data['tipe_wr']=='2'?'required':'disabled'):'disabled');
 								echo "
 								<label class='input' id='nm_wp1'>
 									<input type='text' name='nm_wp_wr' id='nm_wp_wr1' class='form-control' value='".$curr_data['nm_wp_wr']."' style='display:".$display1."' ".$ext_attr1."/>
@@ -203,7 +206,10 @@
 							</div>
 						</div>
 					</section>
-
+					
+					
+				</div>
+				<div class="col col-6">
 					<section>
 						<div class="row">
 							<label class="label col col-4">Kode Pos</label>
@@ -214,9 +220,6 @@
 							</div>
 						</div>
 					</section>
-					
-				</div>
-				<div class="col col-6">					
 
 					<section>
 						<div class="row">

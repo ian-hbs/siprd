@@ -172,8 +172,7 @@
 
 	var fn = "<?php echo $fn; ?>";
     function get_organitation_data(org_id)
-    {
-
+    {    	
     	$.ajax({
             type:'POST',
             url:'ajax/'+fn+'/goverment_org.php',
