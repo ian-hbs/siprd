@@ -85,10 +85,11 @@
 		</div>
 	</div>
 	<script>		
-		function choose(npwrd,wp_wr)
+		function choose(npwrd,nm_wp_wr,kd_rekening)
 		{
 			$('#npwrd').val(npwrd);
-			$('#nm_wp_wr').val(wp_wr);
+			$('#nm_wp_wr').val(nm_wp_wr);
+			$('#kd_rekening').val(kd_rekening);
 			$('#close-modal-form').click();
 		}
 	</script>

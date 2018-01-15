@@ -28,7 +28,7 @@
             <td>".$nm_wp_wr."</td>
             <td>".$alamat_wp_wr."</td>
             <td align='center'>
-            <a href='javascript:;' title='Pilih' class='btn btn-xs btn-default' id='chose_".$no."' onclick=\"choose('".$npwrd."','".$nm_wp_wr."')\">
+            <a href='javascript:;' title='Pilih' class='btn btn-xs btn-default' id='chose_".$no."' onclick=\"choose('".$npwrd."','".$nm_wp_wr."','".$kd_rekening."')\">
                 <i class='fa fa-check'></i>
             </a>
             </td>
