@@ -17,6 +17,7 @@
 	$fn = $_POST['fn'];
 	$men_id = $_POST['men_id'];
 	$item = (isset($_POST['item'])?'1':'0');
+	$karcis = (isset($_POST['karcis'])?'2':'1');
 
 	$arr_data=array();
 
@@ -37,6 +38,7 @@
 	if($act=='add')
 	{		
 		$arr_data['item'] = $item;
+		$arr_data['karcis'] = $karcis;
 
 		$result = $DML->save($arr_data);
 		
@@ -48,6 +50,7 @@
 	{		
 		$id=$_POST['id'];
 		$arr_data['item'] = $item;
+		$arr_data['karcis'] = $karcis;
 		
 		$cond = "id_jenis_retribusi='".$id."'";
 		$result = $DML->update($arr_data,$cond);

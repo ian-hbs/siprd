@@ -15,7 +15,7 @@
     $id_name = 'id_jenis_retribusi';
     $id_value = ($act=='edit'?$_GET['id']:$global->get_incrementID('app_ref_jenis_retribusi','id_jenis_retribusi'));
 
-    $arr_field = array('kd_rekening','jenis_retribusi','dasar_hukum_pengenaan','item');
+    $arr_field = array('kd_rekening','jenis_retribusi','dasar_hukum_pengenaan','item','tipe_retribusi');
 
     $curr_data = $DML->getCurrentData($act,$arr_field,$id_name,$id_value);
     $form_id = 'retribution-type-form';	
@@ -96,8 +96,18 @@
 									<input type="checkbox" name="item" id="item" value="1" <?php echo ($act=='edit'?($curr_data['item']=='1'?'checked':''):'checked'); ?>/>
 									<i></i>Item Rekening
 								</label>
+							</div>
+						</div>
+					</section>
 
-								
+					<section>
+						<div class="row">
+							<label class="label col col-3">&nbsp;</label>
+							<div class="col col-8">
+								<label class="checkbox">
+									<input type="checkbox" name="karcis" id="karcis" value="2" <?php echo ($act=='edit'?($curr_data['tipe_retribusi']=='2'?'checked':''):''); ?>/>
+									<i></i>Karcis
+								</label>
 							</div>
 						</div>
 					</section>

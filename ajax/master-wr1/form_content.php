@@ -8,6 +8,7 @@
 	$global =new global_obj($db);
 	$DML1 = new DML('app_reg_wr',$db);
 	$DML2 = new DML('app_ref_instansi',$db);
+	$DML3 = new DML('app_ref_jenis_retribusi',$db);
 
 	$act = $_GET['act'];
 	$fn = $_GET['fn'];
@@ -17,7 +18,7 @@
     $id_value = ($act=='edit'?$_GET['id']:'');    
 
     $arr_field = array('no_registrasi','nm_wp_wr','alamat_wp_wr','no_tlp','kelurahan','kecamatan','kota','kd_pos',
-    					'tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','npwrd','jenis_wr');
+    					'tgl_form_diterima','tgl_batas_kirim','tgl_pendaftaran','npwrd','jenis_wr','kd_rekening');
 
     $curr_data = $DML1->getCurrentData($act,$arr_field,$id_name,$id_value);
     $form_id = 'wr-reg-form';
@@ -55,8 +56,11 @@
     	<input type="hidden" name="men_id" value="<?=$men_id?>"/>
     	<input type="hidden" name="jenis_retribusi" value="1"/>
 		<fieldset>
+			
+
 			<div class="row">
 				<div class="col col-6">
+					
 					<section>
 						<div class="row">
 							<label class="label col col-4">No. Registrasi</label>
@@ -68,6 +72,45 @@
 
 						</div>
 					</section>
+
+
+					<section>
+						<div class="row">
+							<label class="label col col-4">Jenis Retribusi <font color="red">*</font></label>
+							<div class="col col-8">
+								<label class="state">
+									<select name="kd_rekening" class="form-control" id="kd_rekening" <?=($act=='add'?'required':'disabled')?>>
+										<option value="" selected></option>
+										<?php
+
+											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' ORDER BY id_jenis_retribusi ASC";
+											$result1 = $db->Execute($sql);
+											
+											while($row1 = $result1->FetchRow())
+											{
+												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
+												
+												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 ORDER BY id_jenis_retribusi ASC";
+												$result2 = $db->Execute($sql);
+												
+												while($row2 = $result2->FetchRow())
+												{
+													$selected = ($act=='edit'?(substr($row2['kd_rekening'],0,5)==$curr_data['kd_rekening']?'selected':''):'');
+													echo "<option value='".$row2['kd_rekening']."' ".$selected.">".$row2['jenis_retribusi']."</option>";
+												}
+
+												echo "</optgroup>";
+											}
+											
+										?>
+									</select>
+									
+								</label>
+							</div>
+
+						</div>
+					</section>
+
 				
 					<section>
 						<div class="row">
@@ -104,7 +147,7 @@
 									<input type='text' name='nm_wp_wr' id='nm_wp_wr1' class='form-control' value='".$curr_data['nm_wp_wr']."' style='display:".$display1."' ".$ext_attr1."/>
 								</label>
 
-								<label class='select' id='nm_wp2'>
+								<label class='state' id='nm_wp2'>
 									<select name='nm_wp_wr' id='nm_wp_wr2' class='form-control' onchange=\"get_organitation_data(this.value);\" style='display:".$display2."' ".$ext_attr2.">
 										<option value='' selected></option>";
 										
