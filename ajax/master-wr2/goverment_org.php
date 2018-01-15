@@ -3,7 +3,7 @@
 	require_once("../../lib/DML.php");
     require_once("../../lib/global_obj.php");
 
-    $x_org_data = $_POST['org_id'];        
+    $x_org_data = explode('_',$_POST['org_id']);
         
     $result = $db->Execute("SELECT * FROM app_ref_instansi WHERE(kd_instansi='".$x_org_data[0]."')");
     
