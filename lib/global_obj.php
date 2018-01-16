@@ -134,28 +134,43 @@
 			return $userid;
 		}
 
-		function get_new_number($type)
+		function get_new_number($type,$kd_rekening='')
 		{
 			$table = "";
 			$field = "";
+			$new_number = "";
+
 			switch($type)
 			{
 				case '1':$table='app_nota_perhitungan';$field="no_nota_perhitungan";break;
 				case '2':$table='app_skrd';$field="no_skrd";break;
 			}
-
 			$curr_year = date('Y');
-			$sql = "SELECT MAX(".$field.") as last_num FROM public.".$table." WHERE thn_retribusi='".$curr_year."'";
-			
-			$result = $this->_db->Execute($sql);
-			if(!$result)
-				echo($this->_db->ErrorMsg());
 
-			$new_number = 1;
-			if($result->RecordCount()>0)
+			$s = true;
+
+			if($type=='2')
 			{
-				$row = $result->FetchRow();
-				$new_number = (int) $row['last_num'] + 1;
+				$s = ($kd_rekening!='');
+			}
+			
+			if($s)
+			{
+				$sql = "SELECT MAX(".$field.") as last_num FROM public.".$table." WHERE ".($kd_rekening!=''?"kd_rekening='".$kd_rekening."' AND ":"");
+				$sql .= "thn_retribusi='".$curr_year."'";
+				
+				$result = $this->_db->Execute($sql);
+				if(!$result)
+				{
+					echo($this->_db->ErrorMsg());
+				}
+				
+				$new_number = 1;
+				if($result->RecordCount()>0)
+				{
+					$row = $result->FetchRow();
+					$new_number = (int) $row['last_num'] + 1;
+				}
 			}
 
 			return $new_number;	
@@ -166,9 +181,9 @@
 			return $this->get_new_number('1');
 		}
 
-		function get_new_skrd_number()
+		function get_new_skrd_number($kd_rekening)
 		{
-			return $this->get_new_number('2');
+			return $this->get_new_number('2',$kd_rekening);
 		}
 
 		function get_district_name($id)
@@ -265,6 +280,13 @@
 			$sql = "SELECT SUM(total_bayar) as total_pembayaran FROM app_pembayaran_retribusi WHERE(kd_billing='".$billing_code."') AND (status_reversal='0')";
 			$total_payment = $this->_db->getOne($sql);
 			return $total_payment;
+		}
+
+		function get_retribution_ref($kd_rekening,$field)
+		{
+			$sql = "SELECT ".$field." FROM app_ref_jenis_retribusi WHERE(kd_rekening='".$kd_rekening."')";
+			$result = $this->_db->getOne($sql);
+			return $result;
 		}
 
 		function get_system_params()

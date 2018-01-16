@@ -12,7 +12,7 @@
     
 	$npwrd = trim($_POST['npwrd']);
 	$thn_retribusi = $_POST['tahun_retribusi'];
-	$kd_rekening = $_POST['kd_rekening'];
+	$kd_rekening = $_POST['korek'];
 	$fn = $_POST['fn'];
 	$men_id = $_POST['men_id'];
 
@@ -53,7 +53,7 @@
 			<h2>
 				<?php
 				if($addAccess)
-					echo "<a href='ajax/".$fn."/form_content.php?act=add&npwrd=".$npwrd."&thn_retribusi=".$thn_retribusi."&kd_rekening=".$kd_rekening."fn=".$fn."&men_id=".$men_id."' data-toggle='modal' data-target='#remoteModal' style='color:white;text-decoration:underline!important'>";
+					echo "<a href='ajax/".$fn."/form_content.php?act=add&npwrd=".$npwrd."&thn_retribusi=".$thn_retribusi."&kd_rekening=".$kd_rekening."&fn=".$fn."&men_id=".$men_id."' data-toggle='modal' data-target='#remoteModal' style='color:white;text-decoration:underline!important'>";
 				else
 					echo "<a href='javascript:;' onclick=\"alert('Anda tidak memiliki hak akses untuk menambah data !');\" style='color:white;text-decoration:underline!important'>";
 				

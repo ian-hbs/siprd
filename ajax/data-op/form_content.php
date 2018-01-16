@@ -6,6 +6,10 @@
 	require_once("../../helpers/date_helper.php");
 
 	$global =new global_obj($db);
+	
+	$system_params = $global->get_system_params();
+	$korek_imb = $system_params[20];
+
 	$DML1 = new DML('app_nota_perhitungan',$db);
 	$DML2 = new DML('app_ref_jenis_retribusi',$db);	
 
@@ -17,14 +21,22 @@
     $id_value = ($act=='edit'?$_GET['id']:'');
 
     $npwrd = $_GET['npwrd'];
-    $fk_skrd = '';
-    $input_imb = '';
+    $kd_rekening = $_GET['kd_rekening'];
+    $bln_retribusi = date('m');    
 
-    if($act=='edit')
+    $fk_skrd = '';    
+
+    if($act=='add')
     {
-    	$input_imb = $db->getOne("SELECT imb FROM app_nota_perhitungan WHERE(".$id_name."='".$id_value."')");
+    	$input_imb = ($kd_rekening==$korek_imb?'1':'0');
+    	$jenis_retribusi = $global->get_retribution_ref($kd_rekening,'jenis_retribusi');
+    	$dasar_pengenaan = $global->get_retribution_ref($kd_rekening,'dasar_pengenaan');
+    }
+    else
+    {
+    	$input_imb = $db->getOne("SELECT imb FROM app_nota_perhitungan WHERE(".$id_name."='".$id_value."')");    	
 
-    	$sql = "SELECT a.*,b.no_skrd,b.tgl_skrd,c.kd_rekening,c.dasar_hukum_pengenaan".($input_imb=='1'?',d.*':'')." FROM app_nota_perhitungan as a 
+    	$sql = "SELECT a.*,b.no_skrd,b.tgl_skrd,c.kd_rekening,c.jenis_retribusi,c.dasar_hukum_pengenaan".($input_imb=='1'?',d.*':'')." FROM app_nota_perhitungan as a 
     			LEFT JOIN app_skrd as b ON (a.fk_skrd=b.id_skrd)    			
     			LEFT JOIN app_ref_jenis_retribusi as c ON (a.kd_rekening=c.kd_rekening)";
     	
@@ -42,17 +54,19 @@
     	$curr_data = $result->FetchRow();
 
     	$fk_skrd = $curr_data['fk_skrd'];
+    	$kd_rekening = $curr_data['kd_rekening'];
+    	$jenis_retribusi = $curr_data['jenis_retribusi'];
+    	$dasar_pengenaan = $curr_data['dasar_pengenaan'];
+    	$bln_retribusi = $curr_data['bln_retribusi'];
     }    
 
     $form_id = 'nota-perhitungan-form';
 	
 	$nnp = ($act=='add'?$global->get_new_bill_number():$curr_data['no_nota_perhitungan']);
-	$nskrd = ($act=='add'?$global->get_new_skrd_number():$curr_data['no_skrd']);
+	$nskrd = ($act=='add'?$global->get_new_skrd_number($kd_rekening):$curr_data['no_skrd']);
 	
 	$act_lbl = ($act=='add'?'menambah':'merubah');
 	$act_lbl .= " data!";
-
-	
 ?>
 
 <script type="text/javascript">
@@ -107,7 +121,7 @@
 							<label class="label col col-4">No. SKRD</label>
 							<div class="col col-4">
 								<label class="input state-disabled">
-									<input type="text" name="no_skrd" id="no_skrd1" class="form-control" value="<?=$nskrd;?>" readonly/>
+									<input type="text" name="no_skrd" id="no_skrd1" class="form-control disabled-bg" value="<?=$nskrd;?>" readonly/>
 									
 									<select name="no_skrd" id="no_skrd2" class="form-control" style="display:none;" disabled>
 										<option value="" selected></option>
@@ -148,7 +162,7 @@
 										<?php
 											for($i=1;$i<=12;$i++)
 											{
-												$selected = ($act=='edit'?($curr_data['bln_retribusi']==$i?'selected':''):'');
+												$selected = ($bln_retribusi==$i?'selected':'');
 												echo "<option value='".$i."' ".$selected.">".get_monthName($i)."</option>";
 											}
 										?>
@@ -173,7 +187,7 @@
 							<label class="label col col-4">No. Nota</label>
 							<div class="col col-4">
 								<label class="input state-disabled">
-									<input type="text" name="no_nota_perhitungan" id="no_nota_perhitungan" class="form-control" value="<?=$nnp;?>" readonly/>
+									<input type="text" name="no_nota_perhitungan" id="no_nota_perhitungan" class="form-control disabled-bg" value="<?=$nnp;?>" readonly/>
 								</label>
 							</div>
 
@@ -184,25 +198,32 @@
 						<div class="row">
 							<label class="label col col-4">Jenis Retribusi <font color="red">*</font></label>
 							<div class="col col-8">
-								<label class="input">
-									<select name="kd_rekening" id="kd_rekening" class="form-control" onchange="get_basis_of_imposion(this.value)" <?=($act=='add'?'required':'disabled')?>>
+								<label class="state">
+									<?php										
+										$required = ($kd_rekening!=''?'disabled':'');
+									?>
+									<select name="kd_rekening" id="kd_rekening" class="form-control" title="<?=$jenis_retribusi?>" onchange="get_basis_of_imposion(this.value)" <?=$required?>>
 										<option value="" selected></option>
 										<?php
 
-											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' ORDER BY id_jenis_retribusi ASC";
+											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' 
+													and kd_rekening in (select substring(kd_rekening from 1 for 5) from app_ref_jenis_retribusi where tipe_retribusi='1') 
+													ORDER BY id_jenis_retribusi ASC";
+
 											$result1 = $db->Execute($sql);
 											
 											while($row1 = $result1->FetchRow())
 											{
-												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
+												echo "<optgroup label='".$row1['jenis_retribusi']."'>";												
 												
-												
-												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 ORDER BY id_jenis_retribusi ASC";
+												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 
+														AND tipe_retribusi='1' ORDER BY id_jenis_retribusi ASC";
+
 												$result2 = $db->Execute($sql);
 												
 												while($row2 = $result2->FetchRow())
-												{
-													$selected = ($act=='edit'?(substr($row2['kd_rekening'],0,5)==$curr_data['kd_rekening']?'selected':''):'');
+												{													
+													$selected = ($row2['kd_rekening']==$kd_rekening?'selected':'');
 													echo "<option value='".$row2['kd_rekening']."' ".$selected.">".$row2['jenis_retribusi']."</option>";
 												}
 
@@ -212,9 +233,9 @@
 										?>
 									</select>
 									<?php
-										if($act=='edit')
+										if($kd_rekening!='')
 										{
-											echo "<input type='hidden' name='kd_rekening' value='".$curr_data['kd_rekening']."'/>";
+											echo "<input type='hidden' name='kd_rekening' value='".$kd_rekening."'/>";
 										}
 									?>
 								</label>
@@ -228,7 +249,7 @@
 							<label class="label col col-4">Kode Rekening</label>
 							<div class="col col-8">
 								<label class="input">
-									<input type="text" name="kode_rekening" id="kode_rekening" value="<?=($act=='edit'?$curr_data['kd_rekening']:'');?>" class="form-control" <?=($act=='add'?'':'disabled')?> />
+									<input type="text" name="kode_rekening" id="kode_rekening" value="<?=$kd_rekening?>" class="form-control disabled-bg" <?=($kd_rekening!=''?'readonly':'')?> />
 								</label>
 							</div>
 
@@ -240,7 +261,7 @@
 							<label class="label col col-4">Dasar Pengenaan</label>
 							<div class="col col-8">
 								<label class="input">
-									<input type="text" name="dasar_pengenaan" id="dasar_pengenaan" class="form-control" value="<?=($act=='edit'?$curr_data['dasar_hukum_pengenaan']:'');?>" <?=($act=='add'?'':'disabled')?>/>
+									<input type="text" name="dasar_pengenaan" id="dasar_pengenaan" class="form-control disabled-bg" value="<?=$dasar_pengenaan?>" <?=($kd_rekening!=''?'disabled':'')?>/>
 								</label>
 							</div>
 
@@ -283,7 +304,10 @@
 		// loadScript("js/plugin/jquery-form/jquery-form.min.js", $loginForm);
 		
 		var form_id = '<?php echo $form_id;?>';
+		var korek_imb = '<?php echo $korek_imb;?>';
+
 	    var $billing_form = $('#'+form_id);
+
 	    var stat = $billing_form.validate({
 			// Rules for form validation			
 
@@ -683,8 +707,6 @@
 	    }
 
 
-
-
 	    function get_basis_of_imposion(kd_rekening)
 	    {
 
@@ -709,10 +731,15 @@
 	                }
 	                else
 	                {                         
-	                    
+	                    var result_array    = data.split('|%&%|');
+	                    var dasar_pengenaan = result_array[0];
+	                    var no_skrd     	= result_array[1];
+
 	                    $('#kode_rekening').val(kd_rekening);
-	                    $('#dasar_pengenaan').val(data);
-	                    if(kd_rekening!='4120301')
+	                    $('#dasar_pengenaan').val(dasar_pengenaan);
+	                    $('#no_skrd1').val(no_skrd);
+
+	                    if(kd_rekening!=korek_imb)
 	                    {
 	                    	$('#retribution-valuation-panel1').show();
 	                    	$('#retribution-valuation-panel2').hide();

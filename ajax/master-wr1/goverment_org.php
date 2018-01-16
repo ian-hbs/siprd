@@ -1,7 +1,5 @@
 <?php    
-    require_once("inc/init.php");
-	require_once("../../lib/DML.php");
-    require_once("../../lib/global_obj.php");
+    require_once("inc/init.php");	
 
     $x_org_data = explode('_', $_POST['org_id']);
      

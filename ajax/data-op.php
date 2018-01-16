@@ -123,10 +123,10 @@
 									<label class="control-label col-md-2" for="nm_wp_wr">Nama WR</label>
 									<div class="col-md-4">
 						                <input type="text" name="nm_wp_wr" id="nm_wp_wr" class="form-control" readonly/>
-						                <input type="hidden" id="kd_rekening" name="kd_rekening"/>
+						                <input type="hidden" name="korek" id="korek"/>
 									</div>
 									
-								</div>
+								</div>								
 
 								<div class="form-group">
 									

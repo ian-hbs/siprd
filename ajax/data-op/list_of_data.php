@@ -35,7 +35,7 @@ if($readAccess)
 				<td align='right'>".number_format($total_retribusi)."</td>
 				<td align='center'>";
 					if($editAccess)
-		                echo "<a href='ajax/".$fn."/form_content.php?act=edit&id=".$id_nota."&npwrd=".trim($npwrd)."&fn=".$fn."&men_id=".$men_id."' title='Edit' class='btn btn-xs btn-default' id='edit_".$no."' data-toggle='modal' data-target='#remoteModal'>";
+		                echo "<a href='ajax/".$fn."/form_content.php?act=edit&id=".$id_nota."&npwrd=".trim($npwrd)."&kd_rekening=".$kd_rekening."&fn=".$fn."&men_id=".$men_id."' title='Edit' class='btn btn-xs btn-default' id='edit_".$no."' data-toggle='modal' data-target='#remoteModal'>";
 		            else
 		            	echo "<a href='javascript:;' title='Edit' class='btn btn-xs btn-default' id='edit_".$no."' onclick=\"alert('Anda tidak memiliki hak akses untuk merubah data !');\">";
 

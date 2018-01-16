@@ -1,5 +1,10 @@
 <?php
-	$display = ($act=='edit'?($input_imb=='1'?'display':'none'):'none');
+	$display = 'none';
+	if($kd_rekening!='')
+	{
+		$display = ($kd_rekening==$korek_imb?'block':'none');
+	}	
+	
 	echo "
 	<div class='row' id='retribution-valuation-panel2' style='display:".$display."'>
 		<div class='col col-md-12'>

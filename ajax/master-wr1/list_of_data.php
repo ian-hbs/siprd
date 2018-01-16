@@ -6,11 +6,10 @@ if($readAccess)
 		<thead>
 			<tr>
 				<th width='4%'>No.</th>
-				<th>NPWRD</th>
-				<th>No. Registrasi</th>
-				<th>Wajib Retribusi</th>
+				<th>NPWRD</th>				
+				<th>Wajib Retribusi</th>				
 				<th>Alamat WR</th>
-				<th>Tgl. Pendaftaran</th>
+				<th>Jenis Retribusi</th>				
 				<th width='8%'>Aksi</th>
 			</tr>
 		</thead>
@@ -25,11 +24,10 @@ if($readAccess)
 				$no++;
 				echo "
 				<tr><td align='center'>".$no."</td>
-				<td>".$npwrd."</td>
-				<td>".$no_registrasi."</td>
+				<td>".$npwrd."</td>				
 				<td>".$nm_wp_wr."</td>
 				<td>".$alamat_wp_wr.", Kel. ".$kelurahan.", ".$kecamatan.", ".$kota."</td>				
-				<td>".$tgl_pendaftaran."</td>
+				<td>".$jenis_retribusi."</td>				
 				<td align='center'>";
 					if($editAccess)
 		                echo "<a href='ajax/".$fn."/form_content.php?act=edit&id=".$npwrd."&fn=".$fn."&men_id=".$men_id."' title='Edit' class='btn btn-xs btn-default' id='edit_".$no."' data-toggle='modal' data-target='#remoteModal'>";

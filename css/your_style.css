@@ -17,3 +17,7 @@
  * - BODY
  * - CUSTOM STYLES
  */
+
+.readonly-bg{background:#ffefa6!important;color:#606060!important;}
+.disabled-bg{background:#eaeaea!important;}
+.autofill-bg{background:#9bffa8!important;color:#606060!important;}

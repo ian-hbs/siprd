@@ -16,6 +16,7 @@
 	$uc->check_access();
 
 	$input_imb = $_POST['input_imb'];
+	
 	if($input_imb=='0')
 	{	
 		$DML3 = new DML('app_rincian_nota_perhitungan',$db);

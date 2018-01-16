@@ -26,6 +26,12 @@
 	$no_registrasi = substr($no_registrasi,4,4);
 	
 	$npwrd = ($act=='add'?$global->get_npwrd('1'):$curr_data['npwrd']);
+	
+	$jenis_retribusi = '';	
+	if($act=='edit')
+	{
+		$jenis_retribusi = $global->get_retribution_ref($curr_data['kd_rekening'],'jenis_retribusi');
+	}
 
 	$act_lbl = ($act=='add'?'menambah':'merubah');
 	$act_lbl .= " data!";
@@ -65,7 +71,7 @@
 							<label class="label col col-4">No. Registrasi</label>
 							<div class="col col-3">
 								<label class="input">
-									<input type="text" name="no_registrasi" class="form-control" id="no_registrasi" value="<?=$no_registrasi?>" style="font-weight:bold;" readonly/>
+									<input type="text" name="no_registrasi" class="form-control disabled-bg" id="no_registrasi" value="<?=$no_registrasi?>" readonly/>
 								</label>
 							</div>
 
@@ -79,7 +85,7 @@
 							<div class="col col-8">
 								
 								<label class="state">
-									<select name="kd_rekening" class="form-control" id="kd_rekening" <?php echo ($act=='edit'?'disabled':'') ?>>
+									<select name="kd_rekening" class="form-control" id="kd_rekening" title="<?=$jenis_retribusi;?>" <?php echo ($act=='edit'?'disabled':'') ?>>
 										<option value="" selected></option>
 										<?php
 
@@ -94,7 +100,7 @@
 												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
 												
 												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' 
-														AND length(kd_rekening)>5 and tipe_retribusi='1' ORDER BY id_jenis_retribusi ASC";
+														AND length(kd_rekening)>5 AND tipe_retribusi='1' ORDER BY id_jenis_retribusi ASC";
 												$result2 = $db->Execute($sql);
 												
 												while($row2 = $result2->FetchRow())
