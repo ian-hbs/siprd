@@ -31,7 +31,7 @@ if($readAccess)
 				<td>".$kd_rekening."</td>
 				<td>".$jenis_retribusi."</td>
 				<td>".$no_skrd."/".$no_nota_perhitungan."</td>
-				<td>".get_monthName($bln_retribusi)." ".$thn_retribusi." ".$tipe_retribusi." ".$id_skrd."</td>
+				<td>".get_monthName($bln_retribusi)." ".$thn_retribusi."</td>
 				<td>".$dasar_hukum_pengenaan."</td>
 				<td align='right'>".number_format($total_retribusi)."</td>
 				<td align='center'>";

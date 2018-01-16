@@ -49,7 +49,7 @@
 			
 			$sql .= "(".$fields.") VALUES (".$values.")";
 						
-			// echo $sql.'<br /><br />';
+			echo $sql.'<br /><br />';
 			
 			$result=$this->_db->Execute($sql);
 			

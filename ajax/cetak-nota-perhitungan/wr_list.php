@@ -69,6 +69,7 @@
 			<th>NPWRD</th>
 			<th>Nama WR</th>
 			<th>Alamat WR</th>
+			<th>Jenis Retribusi</th>
 			<th width="5%">
 				Aksi
 			</th>
@@ -82,15 +83,20 @@
 			<button type="button" class="btn" id="close-modal-form" data-dismiss="modal">
 				Tutup
 			</button>
+			
 		</div>
 	</div>
 	<script>		
-		function choose(npwrd,wp_wr)
+		function choose(kd_rekening,npwrd,nm_wp_wr)
 		{
+			
 			$('#npwrd').val(npwrd);
-			$('#nm_wp_wr').val(wp_wr);
-			$('#close-modal-form').click();
+			$('#nm_wp_wr').val(nm_wp_wr);
+			$('#korek').val(kd_rekening);
+			$('#browseModal').modal('hide');
+			
 		}
+		
 	</script>
 
 </div>

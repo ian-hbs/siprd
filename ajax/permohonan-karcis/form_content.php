@@ -28,7 +28,7 @@
 
     if($act=='add')
     {
-    	$nskrd = $global->get_new_skrd_number();
+    	$nskrd = $global->get_new_skrd_number('');
     	$tgl_skrd = '';
     }
     else
@@ -72,10 +72,77 @@
 				<div class="col col-md-12">
 					<section>
 						<div class="row">
+							<label class="label col col-3">Wajib Retribusi <font color="red">*</font></label>
+							<div class="col col-8">
+								<label class="state">
+									<select name="npwrd" id="npwrd" class="form-control" onchange="get_retribution_type(this.value)"  <?=($act=='add'?'required':'disabled')?>>
+										<option value="" selected></option>
+										<?php
+											$opts = $DML2->fetchDataBy('tipe_retribusi','2');
+											foreach($opts as $row)
+											{
+												$selected = ($act=='edit'?($row['npwrd']==$curr_data['npwrd']?'selected':''):'');
+												echo "<option value='".$row['npwrd']."' ".$selected.">".$row['nm_wp_wr']."</option>";
+											}
+										?>
+									</select>
+								</label>
+
+								<!-- div class="note">
+									<a href="javascript:void(0)">note here</a>
+								</div -->
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="row">
+							<label class="label col col-3">Jenis Retribusi <font color="red">*</font></label>
+							<div class="col col-8">
+								<label class="input">
+									<select name="kd_rekening" id="kd_rekening1" class="form-control" onchange="get_skrd_num(this.value)" <?=($act=='add'?'required':'disabled')?>>
+										<option value="" selected></option>
+										<?php
+
+											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' 
+													and kd_rekening in (select substring(kd_rekening from 1 for 5) from app_ref_jenis_retribusi where tipe_retribusi='2') 
+													ORDER BY id_jenis_retribusi ASC";
+
+											$result1 = $db->Execute($sql);
+											
+											while($row1 = $result1->FetchRow())
+											{
+												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
+												
+												
+												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 
+														AND tipe_retribusi='2' ORDER BY id_jenis_retribusi ASC";
+
+												$result2 = $db->Execute($sql);
+												
+												while($row2 = $result2->FetchRow())
+												{
+													$selected = ($act=='edit'?($row2['kd_rekening']==$curr_data['kd_rekening']?'selected':''):'');
+													echo "<option value='".$row2['kd_rekening']."' ".$selected.">".$row2['jenis_retribusi']."</option>";
+												}
+
+												echo "</optgroup>";
+											}
+											
+										?>
+									</select>
+									<input type="hidden" name="<?=($act=='add'?'':'kd_rekening');?>" value="<?=($act=='add'?'':$curr_data['kd_rekening'])?>" id="kd_rekening2"/>
+								</label>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="row">
 							<label class="label col col-3">No. SKRD <font color="red">*</font></label>
 							<div class="col col-3">
 								<label class="input state-disabled">
-									<input type="text" name="no_skrd" class="form-control" id="no_skrd" value="<?=$nskrd;?>" readonly/>
+									<input type="text" name="no_skrd" class="form-control disabled-bg" id="no_skrd" value="<?=$nskrd;?>" readonly/>
 								</label>
 							</div>
 
@@ -102,67 +169,6 @@
 								</label>
 							</div>
 
-						</div>
-					</section>
-
-					<section>
-						<div class="row">
-							<label class="label col col-3">Wajib Retribusi <font color="red">*</font></label>
-							<div class="col col-8">
-								<label class="input">
-									<select name="npwrd" id="npwrd" class="form-control" required>
-										<option value="" selected></option>
-										<?php
-											$opts = $DML2->fetchDataBy('jenis_retribusi','2');
-											foreach($opts as $row)
-											{
-												$selected = ($act=='edit'?($row['npwrd']==$curr_data['npwrd']?'selected':''):'');
-												echo "<option value='".$row['npwrd']."' ".$selected.">".$row['nm_wp_wr']."</option>";
-											}
-										?>
-									</select>
-								</label>
-
-								<!-- div class="note">
-									<a href="javascript:void(0)">note here</a>
-								</div -->
-							</div>
-						</div>
-					</section>
-
-					<section>
-						<div class="row">
-							<label class="label col col-3">Jenis Retribusi <font color="red">*</font></label>
-							<div class="col col-8">
-								<label class="input">
-									<select name="kd_rekening" id="kd_rekening" class="form-control" onchange="get_basis_of_imposion(this.value)" required>
-										<option value="" selected></option>
-										<?php
-
-											$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' ORDER BY id_jenis_retribusi ASC";
-											$result1 = $db->Execute($sql);
-											
-											while($row1 = $result1->FetchRow())
-											{
-												echo "<optgroup label='".$row1['jenis_retribusi']."'>";
-												
-												
-												$sql = "SELECT * FROM app_ref_jenis_retribusi WHERE kd_rekening LIKE '".$row1['kd_rekening']."%' AND length(kd_rekening)>5 ORDER BY id_jenis_retribusi ASC";
-												$result2 = $db->Execute($sql);
-												
-												while($row2 = $result2->FetchRow())
-												{
-													$selected = ($act=='edit'?($row2['kd_rekening']==$curr_data['kd_rekening']?'selected':''):'');
-													echo "<option value='".$row2['kd_rekening']."' ".$selected.">".$row2['jenis_retribusi']."</option>";
-												}
-
-												echo "</optgroup>";
-											}
-											
-										?>
-									</select>
-								</label>								
-							</div>
 						</div>
 					</section>
 
@@ -291,6 +297,76 @@
 	            return false;
 	        }
 	    });
+
+	    function get_retribution_type(npwrd)
+	    {
+	    	$.ajax({
+	            type:'POST',
+	            url:'ajax/'+fn+'/retribution_type.php',
+	            data:'npwrd='+npwrd,
+	            beforeSend:function(){
+	                $('#preloadAnimation').show();
+	            },
+	            complete:function(){                    
+	                $('#preloadAnimation').hide();
+	            },
+	            success:function(data)
+	            {
+	                check=/ERROR/;
+	                            
+	                if(data.match(check))
+	                {
+	                    alert(data);
+	                    return true;
+	                }
+	                else
+	                {                         
+	                    var result_array    = data.split('|%&%|');
+	                    var kd_rekening 	= result_array[0];
+	                    var no_skrd     	= result_array[1];
+
+	                    $('#kd_rekening1').val(kd_rekening);
+	                    $('#kd_rekening2').val(kd_rekening);
+	                    $('#no_skrd').val(no_skrd);
+	                    
+	                    $('#kd_rekening1').attr('disabled',kd_rekening!='');
+	                    $('#kd_rekening1').attr('required',kd_rekening=='');
+	                    $('#kd_rekening2').attr('name',(kd_rekening!=''?'kd_rekening':''));
+
+	                }
+	            }
+	        });
+	        
+	    }
+
+	    function get_skrd_num(kd_rekening)
+	    {
+	    	$.ajax({
+	            type:'POST',
+	            url:'ajax/'+fn+'/skrd_num.php',
+	            data:'kd_rekening='+kd_rekening,
+	            beforeSend:function(){
+	                $('#preloadAnimation').show();
+	            },
+	            complete:function(){                    
+	                $('#preloadAnimation').hide();
+	            },
+	            success:function(data)
+	            {
+	                check=/ERROR/;
+	                            
+	                if(data.match(check))
+	                {
+	                    alert(data);
+	                    return true;
+	                }
+	                else
+	                {
+	                    $('#no_skrd').val(data);
+	                }
+	            }
+	        });
+	    }
 
 	</script>
 </div>

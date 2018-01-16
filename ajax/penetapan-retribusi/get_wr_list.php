@@ -5,7 +5,9 @@
 
     $key = $_POST['searched_npwrd'];    
         
-    $sql = "SELECT * FROM app_reg_wr WHERE(jenis_retribusi='1') AND ((npwrd LIKE '%".$key."%') OR (nm_wp_wr LIKE '%".$key."%') OR (alamat_wp_wr LIKE '%".$key."%'))";
+    $sql = "SELECT a.npwrd,a.nm_wp_wr,a.alamat_wp_wr,a.kd_rekening,b.jenis_retribusi FROM app_reg_wr as a LEFT JOIN app_ref_jenis_retribusi as b ON (a.kd_rekening=b.kd_rekening) 
+            WHERE(a.tipe_retribusi='1') AND ((a.npwrd LIKE '%".$key."%') OR (a.nm_wp_wr LIKE '%".$key."%') OR (a.alamat_wp_wr LIKE '%".$key."%'))";
+    
     $result = $db->Execute($sql);
     if(!$result)
     {
@@ -27,8 +29,9 @@
             <td>".$npwrd."</td>
             <td>".$nm_wp_wr."</td>
             <td>".$alamat_wp_wr."</td>
+            <td>".$jenis_retribusi."</td>
             <td align='center'>
-            <a href='javascript:;' title='Pilih' class='btn btn-xs btn-default' id='chose_".$no."' onclick=\"choose('".$npwrd."','".$nm_wp_wr."')\">
+            <a href='javascript:;' title='Pilih' class='btn btn-xs btn-default' id='chose_".$no."' onclick=\"choose('".$kd_rekening."','".$npwrd."','".$nm_wp_wr."');\">
                 <i class='fa fa-check'></i>
             </a>
             </td>

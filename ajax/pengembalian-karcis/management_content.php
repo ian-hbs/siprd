@@ -19,9 +19,9 @@
 
     $sql = "SELECT a.kd_karcis,c.nm_wp_wr,a.nm_rekening,a.jumlah_blok,a.isi_per_blok,
     		a.no_awal,a.no_akhir,a.jumlah_lembar,a.nilai_per_lembar,a.nilai_total_perforasi,a.fk_skrd,
-    		b.kd_billing,b.status_ketetapan,a.total_retribusi
+    		b.kd_billing,b.status_ketetapan,b.no_skrd,a.total_retribusi
     		FROM app_permohonan_karcis as a
-    		LEFT JOIN (SELECT id_skrd,kd_billing,status_ketetapan FROM app_skrd) as b ON (a.fk_skrd=b.id_skrd)
+    		LEFT JOIN (SELECT id_skrd,kd_billing,no_skrd,status_ketetapan FROM app_skrd) as b ON (a.fk_skrd=b.id_skrd)
     		LEFT JOIN app_reg_wr as c ON (a.npwrd=c.npwrd)    		
     		WHERE(a.id_permohonan='".$id_permohonan."')";
    	
@@ -71,8 +71,8 @@
 			    	echo "
 			    	<table class='table table-bordered'>
 			    		<tbody>
-			    			<tr><th class='_label' width='30%'>Kode Karcis</th><td> : ".$row1['kd_karcis']."</td></tr>
-			    			<tr><th class='_label'>Instanasi</th><td> : ".$row1['nm_wp_wr']."</td></tr>
+			    			<tr><th class='_label' width='30%'>Kode Karcis, No. SKRD</th><td> : ".$row1['kd_karcis'].", ".$row1['no_skrd']."</td></tr>
+			    			<tr><th class='_label'>Instansi</th><td> : ".$row1['nm_wp_wr']."</td></tr>
 			    			<tr><th class='_label'>Jenis Retribusi</th><td> : ".$row1['nm_rekening']."</td></tr>
 			    			<tr><th class='_label'>Jumlah Blok, Isi per Blok</th><td> : ".number_format($row1['jumlah_blok']).", ".number_format($row1['isi_per_blok'])."</td></tr>			    			
 			    			<tr><th class='_label'>No. Awal - Akhir</th><td> : ".number_format($row1['no_awal'])." - ".number_format($row1['no_akhir'])."</td></tr>

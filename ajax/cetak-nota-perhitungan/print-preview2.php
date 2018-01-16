@@ -10,13 +10,13 @@
   $global = new global_obj($db);
 
 	$id_nota = $_GET['id'];
-	$sql = "SELECT a.*,b.nm_wp_wr,b.alamat_wp_wr,b.kelurahan,b.kecamatan,a.total_retribusi,
-			c.jenis_retribusi,c.kd_rekening,d.*
+	$sql = "SELECT a.*,b.nm_wp_wr,b.alamat_wp_wr,b.kelurahan,b.kecamatan,a.total_retribusi,c.*
 			FROM app_nota_perhitungan as a 
-      LEFT JOIN app_reg_wr as b ON (a.npwrd=b.npwrd) 
-			LEFT JOIN app_ref_jenis_retribusi as c ON (a.kd_jenis_retribusi=c.id_jenis_retribusi)
-      LEFT JOIN app_rincian_nota_perhitungan_imb2 as d ON (d.fk_nota=a.id_nota)
+      LEFT JOIN app_reg_wr as b ON (a.npwrd=b.npwrd) 			
+      LEFT JOIN app_rincian_nota_perhitungan_imb2 as c ON (c.fk_nota=a.id_nota)
 			WHERE (a.no_nota_perhitungan='".$id_nota."')";  
+
+
 
 	$result = $db->Execute($sql);
 

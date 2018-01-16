@@ -26,7 +26,7 @@
 				echo "
 				<tr>
 				<td align='center'>".$no."</td>
-				<td align='center'>".$kd_billing." ".$ntpd."</td>
+				<td align='center'>".$kd_billing."</td>
 				<td>".$nm_wp_wr."</td>
 				<td>".$nm_rekening."</td>
 				<td align='right'>".number_format($total_retribusi)."</td>
