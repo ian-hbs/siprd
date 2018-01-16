@@ -17,7 +17,7 @@
 
 	$readAccess = $uc->check_priviledge('read',$men_id);
 	
-	$list_sql .= " WHERE (b.npwrd='".$npwrd."') AND (a.thn_retribusi='".$thn_retribusi."')";	
+	$list_sql .= " WHERE (a.npwrd='".$npwrd."') AND (a.thn_retribusi='".$thn_retribusi."')";	
 	
 	$list_of_data = $db->Execute($list_sql);
     if (!$list_of_data)

@@ -35,6 +35,8 @@
 		case '3':filename='lap-realisasi-excel.php';break;
 	}
 
-	window.open('ajax/'+fn+'/'+filename+'?tgl1='+tgl1+'&tgl2='+tgl2+'&rek='+rek+'&s_byr='+s_byr, '_blank');	
+	// window.open('ajax/'+fn+'/'+filename+'?tgl1='+tgl1+'&tgl2='+tgl2+'&rek='+rek+'&s_byr='+s_byr, '_blank');	
+
+	window.open('ajax/'+fn+'/'+filename+'?tgl1='+tgl1+'&tgl2='+tgl2+'&rek='+rek, '_blank');	
 
 </script>

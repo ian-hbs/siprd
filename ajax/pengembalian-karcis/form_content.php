@@ -207,7 +207,7 @@
 	        }
 	        else
 	        {
-	        	alert('Semua karcis telah kembali!');
+	        	alert('Jumlah pengembalian tidak boleh lebih besar dari jumlah karcis terdaftar!');
 	        }
             return false;          
         }

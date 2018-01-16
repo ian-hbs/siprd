@@ -8,7 +8,7 @@ if($readAccess)
 				<th width='4%'>No.</th>
 				<th>Kode Rekening</th>
 				<th>Jenis Retribusi</th>
-				<th>No.SKRD/No. Nota</th>
+				<th>No.SKRD/<br />No. Nota</th>
 				<th>Masa Retribusi</th>
 				<th>Dasar Pengenaan Pajak</th>			
 				<th>Total Bayar</th>
@@ -28,7 +28,7 @@ if($readAccess)
 				$no++;
 				echo "
 				<tr><td align='center'>".$no."</td>
-				<td>".$kd_rekening."</td>
+				<td align='center'>".$kd_rekening."</td>
 				<td>".$jenis_retribusi."</td>
 				<td>".$no_skrd."/".$no_nota_perhitungan."</td>
 				<td>".get_monthName($bln_retribusi)." ".$thn_retribusi."</td>
