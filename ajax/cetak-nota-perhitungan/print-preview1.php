@@ -10,8 +10,8 @@
   $global = new global_obj($db);
 
   $id_nota = $_GET['id'];
-  $sql = "SELECT a.*,b.nm_wp_wr,b.alamat_wp_wr FROM app_nota_perhitungan as a 
-          LEFT JOIN app_reg_wr as b ON (a.npwrd=b.npwrd) WHERE (a.id_nota='".$id_nota."')";
+  $sql = "SELECT a.*,b.wp_wr_nama,b.wp_wr_alamat,b.tgl_penetapan FROM app_nota_perhitungan as a 
+          LEFT JOIN app_skrd as b ON (a.fk_skrd=b.id_skrd) WHERE (a.id_nota='".$id_nota."')";
 
 
   $result = $db->Execute($sql);
@@ -50,7 +50,7 @@
           <td align="center" style="border-right:1px solid #000;border-bottom:1px solid #000;" valign="top">
             <h4 style="margin:0">SKRD<br />
               NOTA PERRHITUNGAN RETRIBUSI DAERAH<br />
-              MASA RETRIBUSI : <?php echo $row['bln_retribusi']." &nbsp;TAHUN : ".$row['thn_retribusi'];?>
+              MASA RETRIBUSI : <?php echo strtoupper(get_monthName($row['bln_retribusi']))." &nbsp;TAHUN : ".$row['thn_retribusi'];?>
             </h4>
             <table border=0 style="100%" cellpadding=0 cellspacing=0>
               <tr>
@@ -74,11 +74,11 @@
           <td align="center" valign="top" style="border-bottom:1px solid #000;">
             <table border=0 width="100%">
               <tr><td>Nomor Nota Perhitungan</td>
-              <td> : <?php echo $row['no_nota_perhitungan'];?></td></tr>
+              <td> : <?php echo sprintf('%02d',$row['no_nota_perhitungan']);?></td></tr>
               <tr><td>Dasar Pengenaan</td>
               <td> : <?php echo $row['dasar_pengenaan'];?></td></tr>
               <tr><td>Nomor Register SKRD</td>
-              <td> : <?php echo $row['no_nota_perhitungan'];?></td></tr>
+              <td> : <?php echo sprintf('%02d',$row['no_nota_perhitungan']);?></td></tr>
             </table>
           </td>
         </tr>
@@ -86,10 +86,10 @@
           <td colspan="3" style="border-bottom:1px solid #000;">
             <table width="100%">
               <tr>
-                <td width="8%">Nama</td><td>: <?php echo $row['nm_wp_wr'];?></td>
+                <td width="8%">Nama</td><td>: <?php echo $row['wp_wr_nama'];?></td>
               </tr>
               <tr>
-                <td>Alamat</td><td>: <?php echo $row['alamat_wp_wr'];?></td>
+                <td>Alamat</td><td>: <?php echo $row['wp_wr_alamat'];?></td>
               </tr>
             </table>
           </td>
@@ -156,22 +156,22 @@
             echo "
               <td style='font-weight:".($row2['header']=='1'?'bold':'normal')."'>".$row2['uraian']."</td>
               <td align='right'>".($row2['header']=='1'?'':$row2['volume'])."</td>
-              <td align='right'>".($row2['header']=='1'?'':number_format($row2['tarif']))."</td>
-              <td align='right'>".($row2['header']=='1'?'':number_format($row2['ketetapan']))."</td>
-              <td align='right'>".($row2['header']=='1'?'':number_format($row2['kenaikan']))."</td>
-              <td align='right'>".($row2['header']=='1'?'':number_format($row2['denda']))."</td>
-              <td align='right'>".($row2['header']=='1'?'':number_format($row2['bunga']))."</td>
-              <td align='right' style='font-weight:".($row2['header']=='1'?'bold':'normal')."'>".number_format($row2['total'])."</td>
+              <td align='right'>".($row2['header']=='1'?'':number_format($row2['tarif'],0,',','.'))."</td>
+              <td align='right'>".($row2['header']=='1'?'':number_format($row2['ketetapan'],0,',','.'))."</td>
+              <td align='right'>".($row2['header']=='1'?'':number_format($row2['kenaikan'],0,',','.'))."</td>
+              <td align='right'>".($row2['header']=='1'?'':number_format($row2['denda'],0,',','.'))."</td>
+              <td align='right'>".($row2['header']=='1'?'':number_format($row2['bunga'],0,',','.'))."</td>
+              <td align='right' style='font-weight:".($row2['header']=='1'?'bold':'normal')."'>".number_format($row2['total'],0,',','.')."</td>
             </tr>";
           }
           echo "<tr>
           <td colspan='9'></td>
           <td align='right'><b>Jumlah</b></td>
-          <td align='right'><b>".number_format($row['total_retribusi'])."</b></td>
+          <td align='right'><b>".number_format($row['total_retribusi'],0,',','.')."</b></td>
           </tr>
           <tr>
           <td colspan='3'></td>
-          <td colspan='9'>Jumlah dengan huruf : (<b>".ucwords(NumToWords($row['total_retribusi']))." Rupiah</b>)</td>
+          <td colspan='9'>Jumlah dengan huruf : <b>".NumToWords($row['total_retribusi'])." rupiah ----</b></td>
           </tr>
           ";
           ?>
@@ -203,7 +203,7 @@
         NIP. <?=$system_params[16]?>
         </td>
         <td>
-          <?php echo $system_params[6].", ".indo_date_format(date('Y-m-d'),'longDate');?><br /><br />
+          <?php echo $system_params[6].", ".indo_date_format($row['tgl_penetapan'],'longDate');?><br /><br />
           <table width="100%" border=0>
             <tr>
               <td>Nama</td><td> : <?=$system_params[17]?></td>

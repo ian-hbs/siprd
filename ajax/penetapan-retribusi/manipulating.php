@@ -19,16 +19,18 @@
 	$npwrd = $_POST['npwrd'];
 	$thn_retribusi = $_POST['thn_retribusi'];
 	$fn = $_POST['fn'];
-	$men_id = $_POST['men_id'];
+	$men_id = $_POST['men_id'];	
 
 	if($act=='edit')
 	{
+		$tgl_penetapan = $_POST['tgl_penetapan'];
 		$cond = "id_skrd='".$id_skrd."'";
 		$ditetapkan = '1';
 		$kd_billing = $global->get_billing_code('1');
 
 		$arr_data['status_ketetapan'] = $ditetapkan;
 		$arr_data['kd_billing'] = $kd_billing;
+		$arr_data['tgl_penetapan'] = us_date_format($tgl_penetapan);
 
 		$result = $DML->update($arr_data,$cond);
 		if(!$result)
@@ -41,6 +43,7 @@
 
 		$arr_data['status_ketetapan'] = $ditetapkan;
 		$arr_data['kd_billing'] = '';
+		$arr_data['tgl_penetapan'] = Null;
 
 		$result = $DML->update($arr_data,$cond);
 		if(!$result)

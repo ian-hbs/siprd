@@ -146,39 +146,31 @@
 				case '2':$table='app_skrd';$field="no_skrd";break;
 			}
 			$curr_year = date('Y');
-
-			$s = true;
-
-			if($type=='2')
+			
+			
+			$sql = "SELECT MAX(".$field.") as last_num FROM public.".$table." WHERE ".($kd_rekening!=''?"kd_rekening='".$kd_rekening."' AND ":"");
+			$sql .= "thn_retribusi='".$curr_year."'";
+			
+			$result = $this->_db->Execute($sql);
+			if(!$result)
 			{
-				$s = ($kd_rekening!='');
+				echo($this->_db->ErrorMsg());
 			}
 			
-			if($s)
+			$new_number = 1;
+			if($result->RecordCount()>0)
 			{
-				$sql = "SELECT MAX(".$field.") as last_num FROM public.".$table." WHERE ".($kd_rekening!=''?"kd_rekening='".$kd_rekening."' AND ":"");
-				$sql .= "thn_retribusi='".$curr_year."'";
-				
-				$result = $this->_db->Execute($sql);
-				if(!$result)
-				{
-					echo($this->_db->ErrorMsg());
-				}
-				
-				$new_number = 1;
-				if($result->RecordCount()>0)
-				{
-					$row = $result->FetchRow();
-					$new_number = (int) $row['last_num'] + 1;
-				}
+				$row = $result->FetchRow();
+				$new_number = (int) $row['last_num'] + 1;
 			}
+			
 
 			return $new_number;	
 		}
 
-		function get_new_bill_number()
+		function get_new_bill_number($kd_rekening)
 		{
-			return $this->get_new_number('1');
+			return $this->get_new_number('1',$kd_rekening);
 		}
 
 		function get_new_skrd_number($kd_rekening)

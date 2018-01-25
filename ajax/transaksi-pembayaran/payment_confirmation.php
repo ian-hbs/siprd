@@ -83,12 +83,14 @@
 								}
 								else
 								{
-									$sql = "SELECT a.nm_rekening,a.nilai_total_perforasi as total_retribusi,a.kd_rekening,
+									$sql = "SELECT a.id_permohonan,a.nm_rekening,a.nilai_total_perforasi as total_retribusi,a.kd_rekening,
 										(SELECT SUM(total_retribusi) FROM app_pengembalian_karcis as x WHERE(x.fk_permohonan=a.id_permohonan) AND (x.status_bayar='0')) as total_ketetapan_retribusi
 										FROM app_permohonan_karcis as a WHERE(a.fk_skrd='".$id_skrd."')";
-								}								
-								
-								$row2 = $db->getRow($sql);								
+								}
+
+								$row2 = $db->getRow($sql);
+
+								$id_permohonan_karcis = ($tipe_retribusi=='2'?$row2['id_permohonan']:'');
 								$kd_rekening = $row2['kd_rekening'];
 								$nm_rekening = $row2['nm_rekening'];
 								$total_retribusi = $row2['total_retribusi'];
@@ -117,7 +119,8 @@
 										<tr id='bukti_bayar'>
 										</tr>
 									</tbody>
-								</table>								
+								</table>
+								<input type='hidden' name='id_permohonan_karcis' id='id_permohonan_karcis' value='".$id_permohonan_karcis."'/>
 								<input type='hidden' name='kd_rekening' id='kd_rekening' value='".$kd_rekening."'/>
 								<input type='hidden' name='nm_rekening' id='nm_rekening' value='".$nm_rekening."'/>
 								<input type='hidden' name='total_retribusi' id='total_retribusi' value='".($tipe_retribusi=='1'?$total_retribusi:$dibayar)."'/>

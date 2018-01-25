@@ -25,7 +25,7 @@ if($readAccess)
 	              }	             
 	            
 				$no++;
-				$status = ($status_ketetapan=='1'?"<font color='green'>dikonfirmasi</font><br />Bill:".$kd_billing:"<font color='red'>menunggu konfirmasi</font>");
+				$status = ($status_ketetapan=='1'?"<font color='green'>dikonfirmasi</font><br />Bill: ".$kd_billing."<br />Tgl.: ".indo_date_format($tgl_penetapan,'shortDate'):"<font color='red'>menunggu konfirmasi</font>");
 				echo "
 				<tr><td align='center'>".$no."</td>
 				<td>".$no_skrd."</td>

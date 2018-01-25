@@ -30,7 +30,7 @@
     {
     	$input_imb = ($kd_rekening==$korek_imb?'1':'0');
     	$jenis_retribusi = $global->get_retribution_ref($kd_rekening,'jenis_retribusi');
-    	$dasar_pengenaan = $global->get_retribution_ref($kd_rekening,'dasar_pengenaan');
+    	$dasar_pengenaan = $global->get_retribution_ref($kd_rekening,'dasar_hukum_pengenaan');
     }
     else
     {
@@ -62,7 +62,7 @@
 
     $form_id = 'nota-perhitungan-form';
 	
-	$nnp = ($act=='add'?$global->get_new_bill_number():$curr_data['no_nota_perhitungan']);
+	$nnp = ($act=='add'?$global->get_new_bill_number($kd_rekening):$curr_data['no_nota_perhitungan']);
 	$nskrd = ($act=='add'?$global->get_new_skrd_number($kd_rekening):$curr_data['no_skrd']);
 	
 	$act_lbl = ($act=='add'?'menambah':'merubah');
@@ -261,7 +261,7 @@
 							<label class="label col col-4">Dasar Pengenaan</label>
 							<div class="col col-8">
 								<label class="input">
-									<input type="text" name="dasar_pengenaan" id="dasar_pengenaan" class="form-control disabled-bg" value="<?=$dasar_pengenaan?>" <?=($kd_rekening!=''?'disabled':'')?>/>
+									<input type="text" name="dasar_pengenaan" id="dasar_pengenaan" class="form-control disabled-bg" value="<?=$dasar_pengenaan?>" <?=($kd_rekening!=''?'readonly':'')?>/>
 								</label>
 							</div>
 
@@ -647,7 +647,7 @@
 	    	var biaya_bangunan = gnv($biaya_bangunan.val()),kj = gnv($kj.val(),'1'),gb = gnv($gb.val(),'1'),lb = gnv($lb.val(),'1'),tb = gnv($tb.val(),'1'),nilai_bangunan = 0;
 	    	biaya_bangunan = replaceall(biaya_bangunan,',','');
 	    	nilai_bangunan = parseFloat(biaya_bangunan) * (parseFloat(kj)*parseFloat(gb)*parseFloat(lb)*parseFloat(tb));
-
+	    	nilai_bangunan = decimal_round(nilai_bangunan,0);
 			nilai_bangunan = (nilai_bangunan==0?0:number_format(nilai_bangunan,0,'.',','));
 
 			$nilai_bangunan.val(nilai_bangunan);
@@ -682,6 +682,7 @@
 	    	total_perhitungan_nb = replaceall(total_perhitungan_nb,',','');
 
 	    	nilai = (koef*total_perhitungan_nb)/100;
+	    	nilai = decimal_round(nilai,0)
 	    	nilai = (nilai==0?0:number_format(nilai,0,'.',','));
 
 	    	$nilai.val(nilai);

@@ -1,12 +1,12 @@
 <?php
     
-    require_once("inc/init.php");	    
+    require_once("inc/init.php");       
 
 
-    $key = $_POST['searched_npwrd'];    
+    $key = strtolower($_POST['searched_npwrd']);
         
     $sql = "SELECT a.npwrd,a.nm_wp_wr,a.alamat_wp_wr,a.kd_rekening,b.jenis_retribusi FROM app_reg_wr as a LEFT JOIN app_ref_jenis_retribusi as b ON (a.kd_rekening=b.kd_rekening) 
-            WHERE(a.tipe_retribusi='1') AND ((a.npwrd LIKE '%".$key."%') OR (a.nm_wp_wr LIKE '%".$key."%') OR (a.alamat_wp_wr LIKE '%".$key."%'))";
+            WHERE(a.tipe_retribusi='1') AND ((lower(a.npwrd) LIKE '%".$key."%') OR (lower(a.nm_wp_wr) LIKE '%".$key."%') OR (lower(a.alamat_wp_wr) LIKE '%".$key."%'))";
     
     $result = $db->Execute($sql);
     if(!$result)
@@ -19,7 +19,7 @@
     {
         while($row = $result->FetchRow())
         {
-        	$no++;
+            $no++;
             foreach($row as $key => $val){
                   $key=strtolower($key);
                   $$key=$val;

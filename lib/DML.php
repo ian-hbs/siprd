@@ -61,7 +61,10 @@
 			$sql="UPDATE ".$this->_scheme.".".$this->_tablename." SET";
 			foreach($data as $field => $value)
 			{
-				$sql.= " ".$field."='".$value."',";
+				if(!is_null($value))
+					$sql.= " ".$field."='".$value."',";
+				else
+					$sql.=" ".$field."=NULL";
 			}
 			$sql=rtrim($sql,',');			
 			if($where)
@@ -95,7 +98,7 @@
 				$sql.=" WHERE ".$where;
 			}
 			
-			// echo $sql.'<br /><br />';
+			echo $sql.'<br /><br />';
 			
 			$result=$this->_db->Execute($sql);
 			return $result;

@@ -106,7 +106,7 @@
 									<label class="control-label col-md-2" for="kd_rekening">Jenis Retribusi</label>
 									<div class="col-md-5">
 										<select name="kd_rekening" id="kd_rekening" class="form-control">
-											<option value="" selected></option>
+											<option value="" selected>- Semua Retribusi -</option>
 											<?php
 
 												$sql = "SELECT jenis_retribusi,kd_rekening FROM app_ref_jenis_retribusi WHERE item='0' ORDER BY id_jenis_retribusi ASC";

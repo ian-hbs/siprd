@@ -16,10 +16,12 @@
 	$DML2->set_shceme('payment');
 	
 	$id_skrd = $_POST['id_skrd'];
+	$id_permohonan_karcis = $_POST['id_permohonan_karcis'];
 	$tipe_retribusi = $_POST['tipe_retribusi'];
 	$fn = $_POST['fn'];
 	$kd_billing_sc = $_POST['kd_billing_sc'];
-	$status_bayar_sc = $_POST['status_bayar_sc'];	
+	$status_bayar_sc = $_POST['status_bayar_sc'];
+	
 	$ntpd = $global->get_ntpd();
 	$curr_date = date('Y-m-d H:i:s');
 
@@ -111,7 +113,8 @@
 
 	if($tipe_retribusi=='2')
 	{
-		$cond = "status_bayar='0'";
+		$cond = "fk_permohonan='".$id_permohonan_karcis."' and status_bayar='0'";
+
 		$arr_data4=array();
 		$arr_data4['status_bayar']='1';
 		$arr_data4['ntpd'] = $ntpd;

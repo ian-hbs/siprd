@@ -10,13 +10,12 @@
   $global = new global_obj($db);
 
 	$id_nota = $_GET['id'];
-	$sql = "SELECT a.*,b.nm_wp_wr,b.alamat_wp_wr,b.kelurahan,b.kecamatan,a.total_retribusi,c.*
+
+	$sql = "SELECT a.*,b.wp_wr_nama,b.wp_wr_alamat,b.wp_wr_lurah,b.wp_wr_camat,b.tgl_penetapan,a.total_retribusi,c.*
 			FROM app_nota_perhitungan as a 
-      LEFT JOIN app_reg_wr as b ON (a.npwrd=b.npwrd) 			
+      LEFT JOIN app_skrd as b ON (a.fk_skrd=b.id_skrd)
       LEFT JOIN app_rincian_nota_perhitungan_imb2 as c ON (c.fk_nota=a.id_nota)
 			WHERE (a.no_nota_perhitungan='".$id_nota."')";  
-
-
 
 	$result = $db->Execute($sql);
 
@@ -82,7 +81,7 @@
   					<table border=0 style="100%" cellpadding=0 cellspacing=0 width="90%">
   						<tr>
   							<td>BULAN/TAHUN</td>
-  							<td>: <?=$row['bln_retribusi']."/".$row['thn_retribusi'];?></td>
+  							<td>: <?=get_monthName($row['bln_retribusi'])." ".$row['thn_retribusi'];?></td>
   						</tr>
   						<tr>
                 <td>DASAR PENGENAAN</td>
@@ -93,9 +92,9 @@
   				<td align="center" valign="top" style="border-bottom:1px solid #000;">
   					<table class="no_border">
   						<tr><td>Nomor Nota Perhitungan</td>
-  						<td> : <?php echo $row['no_nota_perhitungan'];?></td></tr>
-  						<tr><td>No. Kohir/Urut</td><td> : ........</td></tr>
-              <tr><td>No. Kohir/Urut</td><td> : ........</td></tr>
+  						<td> : <?php echo sprintf('%02d',$row['no_nota_perhitungan']);?></td></tr>
+  						<tr><td>No. Kohir/Urut</td><td> : ....................</td></tr>
+              <tr><td>No. Kohir/Urut</td><td> : ....................</td></tr>
   						<tr><td>NPWD</td>
   						<td> : <?php echo $row['npwrd'];?></td></tr>
   					</table>
@@ -105,10 +104,10 @@
   				<td colspan="3" style="border-bottom:1px solid #000;">
   					<table width="100%">
   						<tr>
-  							<td width="8%">Nama</td><td>: <?php echo $row['nm_wp_wr'];?></td>
+  							<td width="8%">Nama</td><td>: <?php echo $row['wp_wr_nama'];?></td>
   						</tr>
   						<tr>
-  							<td>Lokasi</td><td>: <?php echo 'Kel. '.$row['kelurahan'].', Kec.'.$row['kecamatan'];?></td>
+  							<td>Lokasi</td><td>: <?php echo 'Kel. '.$row['wp_wr_lurah'].', Kec.'.$row['wp_wr_camat'];?></td>
   						</tr>
   					</table>
   				</td>
@@ -150,7 +149,7 @@
             <table class='no_border'>";
               foreach($arr_imb2 as $val)
               {
-                echo "<tr><td align='right'>".number_format($val['luas'],2,'.',',')."</tr>";
+                echo "<tr><td align='right'>".number_format($val['luas'],2,',','.')."</tr>";
               }
             echo "</table>
             </td> 
@@ -159,7 +158,7 @@
             <table class='no_border'>";
               foreach($arr_imb2 as $val)
               {
-                echo "<tr><td align='right'>".number_format($val['nilai_satuan'],0,'.',',')."</tr>";
+                echo "<tr><td align='right'>".number_format($val['nilai_satuan'],0,',','.')."</tr>";
               }
             echo "</table>
             </td> 
@@ -168,7 +167,7 @@
             <table class='no_border'>";
               foreach($arr_imb2 as $val)
               {
-                echo "<tr><td align='right'>".number_format($val['biaya_bangunan'],0,'.',',')."</tr>";
+                echo "<tr><td align='right'>".number_format($val['biaya_bangunan'],0,',','.')."</tr>";
               }
             echo "</table>
             </td> 
@@ -178,7 +177,7 @@
               foreach($arr_imb2 as $val)
               {
                 echo "<tr><td align='center'>
-                ".$val['kj']." x ".$val['gb']." x ".$val['lb']." x ".$val['tb']."
+                ".number_format($val['kj'],2,',','.')." x ".number_format($val['gb'],2,',','.')." x ".number_format($val['lb'],2,',','.')." x ".number_format($val['tb'],2,',','.')."
                 </tr>";
               }
             echo "</table>
@@ -190,19 +189,21 @@
               foreach($arr_imb2 as $val)
               {
                 $total_nilai_bangunan += $val['nilai_bangunan'];
-                echo "<tr><td align='right'>".number_format($val['nilai_bangunan'],0,'.',',')."</tr>";
+                echo "<tr><td align='right'>".number_format($val['nilai_bangunan'],0,',','.')."</tr>";
               }
             echo "</table>
             </td> 
             <td>
               <table class='no_border'>";
-                $koef_types = array('permohonan','penatausahaan','plat_nomor','penerbitan_srtif_imb','verifikasi_data_tkns','pengukuran','pematokan_gsj_gss','gbr_rencana','pengawasan_izin');
+                $koef_types = array('permohonan'=>'Permohonan','penatausahaan'=>'Penatausahaan','plat_nomor'=>'Plat Nomor',
+                                    'penerbitan_srtif_imb'=>'Penerbitan SRTIF IMB','verifikasi_data_tkns'=>'Verifikasi Data TKNS','pengukuran'=>'Pengukuran',
+                                    'pematokan_gsj_gss'=>'Pematokan GSJ GSS','gbr_rencana'=>'Gambar Rencana','pengawasan_izin'=>'Pengawasan Izin');                
 
-                foreach($koef_types as $val)
+                foreach($koef_types as $key=>$val)
                 {
                   echo "
                   <tr>
-                    <td>Koef. ".ucfirst($val)."</td><td> : ".$row['koef_'.$val]."</td>
+                    <td>Koef. ".ucfirst($val)."</td><td> : ".number_format($row['koef_'.$key],2,',','.')."</td>
                   </tr>";
                 }
 
@@ -210,11 +211,11 @@
             </td>
             <td>
               <table class='no_border'>";
-                foreach($koef_types as $val)
+                foreach($koef_types as $key=>$val)
                 {
                   echo "
                   <tr>
-                    <td align='right'>".number_format($row['nilai_'.$val])."</td>
+                    <td align='right'>".number_format($row['nilai_'.$key],0,',','.')."</td>
                   </tr>";
                 }
               echo "</table>
@@ -229,7 +230,7 @@
             <td style='border-top:none!important;'></td>
             <td style='border-top:none!important;'></td>
             <td align='right'>
-              <b>".number_format($total_nilai_bangunan)."</b>
+              <b>".number_format($total_nilai_bangunan,0,',','.')."&nbsp;</b>
             </td>
             <td style='border-top:none!important;'></td>
             <td style='border-top:none!important;'></td>
@@ -241,12 +242,12 @@
             <h3>JUMLAH RETRIBUSI</h3>
             </td>
             <td align='right'>
-              <b>".number_format($row['total_nilai_imb'])."</b>
+              <b>".number_format($row['total_nilai_imb'],0,',','.')."</b>
             </td>
           </tr>
           <tr>
           <td colspan='3'></td>
-          <td colspan='7'>Jumlah dengan huruf : (<b>".strtoupper(NumToWords($row['total_retribusi']))." RUPIAH</b>)</td>
+          <td colspan='7'>Jumlah dengan huruf : <b>".NumToWords($row['total_retribusi'])." rupiah ----</b></td>
           </tr>
   				";
   				?>
@@ -278,7 +279,7 @@
         NIP. <?=$system_params[16]?>
   			</td>
   			<td>
-  				<?php echo $system_params[6].", ".indo_date_format(date('Y-m-d'),'longDate');?><br /><br />
+  				<?php echo $system_params[6].", ".indo_date_format($row['tgl_penetapan'],'longDate');?><br /><br />
   				<table width="100%" border=0>
   					<tr>
   						<td>Nama</td><td> : <?=$system_params[17]?></td>

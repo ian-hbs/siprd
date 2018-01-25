@@ -22,6 +22,13 @@
 	table.table th._label{background:#00bbff;color:white}
 </style>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
+		$("#tgl_penetapan").mask('99-99-9999');		
+	});
+</script>
+
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 		&times;
@@ -72,8 +79,18 @@
 										<tr><td>Kode Rekening</td><td>".$row1['kd_rekening']."</td></tr>										
 										<tr><td>Total Retribusi</td><td>Rp. ".number_format($row1['total_retribusi'])."</td></tr>										
 									</tbody>
-								</table>";
-
+								</table>
+								<br />
+								<section>
+									<div class='row'>
+										<label class='label col col-4'>Tgl. Penetapan<font color='red'>*</font></label>
+										<div class='col col-5'>
+											<label class='input'>
+												<input type='text' name='tgl_penetapan' id='tgl_penetapan' class='form-control datepicker' value='".indo_date_format((is_null($row1['tgl_penetapan']) || $row1['tgl_penetapan']==''?$_CURR_DATE:$row['tgl_penetapan']),'shortDate')."' required/>
+											</label>								
+										</div>							
+									</div>
+								</section>";
 
 								?>
 								<br />

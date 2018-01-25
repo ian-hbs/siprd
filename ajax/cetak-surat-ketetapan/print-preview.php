@@ -11,7 +11,8 @@
 
 	$id_skrd = $_GET['id'];
 
-  $sql = "SELECT a.npwrd,a.wp_wr_nama,a.wp_wr_alamat,a.nm_rekening,a.kd_rekening,a.tipe_retribusi,a.no_skrd,a.bln_retribusi,a.thn_retribusi,b.dasar_hukum_pengenaan 
+  $sql = "SELECT a.npwrd,a.wp_wr_nama,a.wp_wr_alamat,a.nm_rekening,a.kd_rekening,a.tipe_retribusi,a.no_skrd,a.bln_retribusi,a.thn_retribusi,
+          a.tgl_penetapan,b.dasar_hukum_pengenaan 
           FROM app_skrd as a LEFT JOIN app_ref_jenis_retribusi as b ON (a.kd_rekening=b.kd_rekening) 
           WHERE(a.id_skrd='".$id_skrd."')";
 
@@ -108,7 +109,7 @@
     				<td align="center" valign="top" style="border-bottom:1px solid #000;">
     					No. Urut SKRD<br />
     					<h4>
-    						<?php echo $row1['no_skrd'];?>
+    						<?php echo sprintf('%02d',$row1['no_skrd']);?>
     					</h4>
     				</td>
     			</tr>
@@ -151,7 +152,7 @@
     					<td align='center'>1</td>
     					<td align='center'>".$row1['kd_rekening']."</td>
     					<td colspan='3'>".$row1['nm_rekening']."</td>
-    					<td align='right'>".number_format($total_retribusi)."</td>
+    					<td align='right'>".number_format($total_retribusi,0,',','.')."</td>
     				</tr>
     				<tr>
     					<td colspan='2'></td>  					
@@ -162,19 +163,19 @@
               <td colspan='2' style='border-top:none;'></td>            
               <td width='10%'>Jumlah Sanksi :</td>
               <td width='2%' style='border-left:none!important'>a.</td><td style='border-left:none!important'>Bunga</td>
-              <td align='right'>".number_format($total_bunga)."</td>
+              <td align='right'>".number_format($total_bunga,0,',','.')."</td>
             </tr>
     				<tr>
     					<td colspan='2' style='border-top:none;'></td>  					
     					<td></td>
               <td style='border-left:none!important'>b.</td><td style='border-left:none!important'>Kenaikan</td>
-              <td align='right'>".number_format($total_kenaikan)."</td>
+              <td align='right'>".number_format($total_kenaikan,0,',','.')."</td>
     				</tr>
             
     				<tr>
     					<td colspan='2' style='border-top:none;border-bottom:none'></td>
     					<td colspan='3'>Jumlah Keseluruhan</td>
-    					<td align='right'><b>".number_format($grand_retribusi)."</td>
+    					<td align='right'><b>".number_format($grand_retribusi,0,',','.')."</td>
     				</tr>
     				<tr>
     				<td colspan='6'>
@@ -182,7 +183,7 @@
   	  				<tr>
   	  					<td width='5%' style='border:none;'>&nbsp;</td>
   	  					<td width='10%' style='border:none;'>Dengan Huruf</td>
-  	  					<td style='border:1px solid #000;border-right:none;'><b>".strtoupper(NumToWords($total_retribusi))." RUPIAH</b></td>
+  	  					<td style='border:1px solid #000;border-right:none;'><b>".NumToWords($total_retribusi)." rupiah ----</b></td>
   	  				</tr>
   	  				</table>
     				</td>  				  				
@@ -204,7 +205,7 @@
     					<tr>
     						<td width='60%' style='border:none'>&nbsp;</td>
     						<td align='center' style='border:none'>
-    						Bekasi, ".indo_date_format(date('Y-m-d'),'longDate')."<br />
+    						Bekasi, ".indo_date_format($row1['tgl_penetapan'],'longDate')."<br />
     						a.n Kepala Badan Pendapatan Daerah<br />
     						Kepala Bidang Pendapatan Daerah<br />
     						<br />

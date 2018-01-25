@@ -15,6 +15,8 @@
 		default:$skrd_cond = "";break;
 	}
 
+	$acc_condition = ($kd_rekening!=''?"(a.kd_rekening='".$kd_rekening."') AND":"");
+
 	if($tipe_retribusi=='1')
 	{
 		$list_sql = "SELECT a.bln_retribusi,a.thn_retribusi,a.total_retribusi,b.* FROM app_nota_perhitungan as a 
@@ -23,7 +25,7 @@
 					 		LEFT JOIN (SELECT ntpd,to_char(tgl_pembayaran,'DD-MM-YYYY') as tgl_pembayaran,denda,total_bayar,kd_billing FROM app_pembayaran_retribusi) as y ON (x.kd_billing=y.kd_billing)
 					 	 ".$skrd_cond.") as b 
 					 ON (a.fk_skrd=b.id_skrd)
-					 WHERE(a.kd_rekening='".$kd_rekening."') AND (a.bln_retribusi='".$bln_retribusi."') AND (a.thn_retribusi='".$thn_retribusi."')";
+					 WHERE ".$acc_condition." (a.bln_retribusi='".$bln_retribusi."') AND (a.thn_retribusi='".$thn_retribusi."')";
 	}
 	else
 	{
@@ -36,10 +38,9 @@
 					 	 LEFT JOIN (SELECT ntpd,denda,total_bayar,kd_billing FROM app_pembayaran_retribusi) as y ON (x.kd_billing=y.kd_billing)
 					 	 ".$skrd_cond.") as b 
 					ON (a.fk_skrd=b.id_skrd)
-					WHERE(a.kd_rekening='".$kd_rekening."') AND (b.bln_retribusi='".$bln_retribusi."') AND (b.thn_retribusi='".$thn_retribusi."')";
+					WHERE ".$acc_condition." (b.bln_retribusi='".$bln_retribusi."') AND (b.thn_retribusi='".$thn_retribusi."')";
 	}
-		
-	
+			
 	$list_of_data = $db->Execute($list_sql);
     if (!$list_of_data)
         echo $db->ErrorMsg();

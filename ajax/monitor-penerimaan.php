@@ -108,7 +108,7 @@
 								                  $$key=$val;
 								              }
 											echo "<tr id='PAY-".$id_pembayaran."'>
-												<td align='center'>".$kd_billing." ".$id_pembayaran."</td>
+												<td align='center'>".$kd_billing."</td>
 												<td align='center'>".$no_skrd."</td>
 												<td>".$nm_wp_wr."</td>
 												<td>".$jenis_retribusi."</td>

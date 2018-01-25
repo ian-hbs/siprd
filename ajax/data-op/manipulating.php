@@ -84,12 +84,14 @@
 			}
 
 			if(in_array($key,$arr_field2))
-			{				
+			{	
+
 				$arr_data2[$key]=$global->real_escape_string($val);
 			}
 
 			if(in_array($key,$arr_field3))
 			{
+				
 				$arr_data3[$key]= ($val==''?0:str_replace(",","",$val));
 			}
 
@@ -168,15 +170,17 @@
 					$arr_data4['nilai_satuan'] = str_replace(',','',$_POST['nilai_satuan'.$i]);
 					$arr_data4['biaya_bangunan'] = str_replace(',','',$_POST['biaya_bangunan'.$i]);
 					$arr_data4['kj'] = ($_POST['kj'.$i]==''?0:str_replace(',','',$_POST['kj'.$i]));
-					$arr_data4['gb'] = ($_POST['kj'.$i]==''?0:str_replace(',','',$_POST['gb'.$i]));
-					$arr_data4['lb'] = ($_POST['kj'.$i]==''?0:str_replace(',','',$_POST['lb'.$i]));
-					$arr_data4['tb'] = ($_POST['kj'.$i]==''?0:str_replace(',','',$_POST['tb'.$i]));
+					$arr_data4['gb'] = ($_POST['gb'.$i]==''?0:str_replace(',','',$_POST['gb'.$i]));
+					$arr_data4['lb'] = ($_POST['lb'.$i]==''?0:str_replace(',','',$_POST['lb'.$i]));
+					$arr_data4['tb'] = ($_POST['tb'.$i]==''?0:str_replace(',','',$_POST['tb'.$i]));
 					$arr_data4['nilai_bangunan'] = str_replace(',','',$_POST['nilai_bangunan'.$i]);
 					$arr_data4['fk_nota'] = $id_nota;
 					
 					$id_rincian_nota1 = $global->get_incrementID('app_rincian_nota_perhitungan_imb1','id_rincian_nota');
 					$arr_data4['id_rincian_nota'] = $id_rincian_nota1;
 					$result = $DML3->save($arr_data4);
+
+					
 
 					if(!$result)
 					{
